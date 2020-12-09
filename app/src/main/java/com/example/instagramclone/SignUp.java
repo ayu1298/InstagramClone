@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -15,14 +17,19 @@ import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
+import java.util.List;
+
 public class SignUp extends AppCompatActivity {
 
     private TextView txtGetData;
+    private Button btnGetAll;
+    private String allBoxers;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         txtGetData=findViewById(R.id.txtGetdata);
+        btnGetAll=findViewById(R.id.btnGetAll);
         txtGetData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -33,6 +40,29 @@ public class SignUp extends AppCompatActivity {
                         if(object!=null && e==null)
                         {
                             txtGetData.setText(object.get("punch_speed") + "");
+                        }
+                    }
+                });
+            }
+        });//To get all data at once
+        btnGetAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                allBoxers="";
+                ParseQuery<ParseObject> queryAll=ParseQuery.getQuery("Boxer");
+                queryAll.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> objects, ParseException e) {
+                        if(e==null)
+                        {
+                            if(objects.size()>0)
+                            {   for(ParseObject parseObject: objects)
+                                allBoxers+=parseObject.get("punch_speed") + "\n";
+                                FancyToast.makeText(SignUp.this,allBoxers,FancyToast.LENGTH_LONG,FancyToast.SUCCESS,true).show();
+                            }
+                            else {
+                                FancyToast.makeText(SignUp.this,"Failed",FancyToast.LENGTH_LONG,FancyToast.ERROR,true).show();
+                            }
                         }
                     }
                 });
