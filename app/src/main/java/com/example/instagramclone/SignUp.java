@@ -22,7 +22,7 @@ import java.util.List;
 public class SignUp extends AppCompatActivity {
 
     private TextView txtGetData;
-    private Button btnGetAll;
+    private Button btnGetAll,btnTransition;
     private String allBoxers;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,7 @@ public class SignUp extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         txtGetData=findViewById(R.id.txtGetdata);
         btnGetAll=findViewById(R.id.btnGetAll);
+        btnTransition=findViewById(R.id.btnNextActivity);
         txtGetData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,6 +51,8 @@ public class SignUp extends AppCompatActivity {
             public void onClick(View view) {
                 allBoxers="";
                 ParseQuery<ParseObject> queryAll=ParseQuery.getQuery("Boxer");
+                queryAll.whereGreaterThan("punch_speed",100);
+                queryAll.setLimit(1);
                 queryAll.findInBackground(new FindCallback<ParseObject>() {
                     @Override
                     public void done(List<ParseObject> objects, ParseException e) {
@@ -68,8 +71,14 @@ public class SignUp extends AppCompatActivity {
                 });
             }
         });
+         btnTransition.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
 
+             }
+         });
     }
+
     public void hello(View view)
     {
         ParseObject boxer=new ParseObject("Boxer");
