@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +40,14 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         edtEmail=findViewById(R.id.edtEnterEmail);
         edtUsername=findViewById(R.id.edtUsername);
         edtPassword=findViewById(R.id.edtPassword);
+        edtPassword.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if(i==keyEvent.KEYCODE_ENTER && keyEvent.getAction()==KeyEvent.ACTION_DOWN)
+                    onClick(btnSignUp);
+                return false;
+            }
+        });
 
         btnSignUp=findViewById(R.id.button);
         btnLogin=findViewById(R.id.btnLogIn);
@@ -56,29 +65,33 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         switch (view.getId())
         {
             case R.id.button:
-                 final ParseUser appuser=new ParseUser();
-                 appuser.setEmail(edtEmail.getText().toString());
-                 appuser.setUsername(edtUsername.getText().toString());
-                 appuser.setPassword(edtPassword.getText().toString());
-               // to show user to wait while u r signed in
-                ProgressDialog progressDialog=new ProgressDialog(this);
-                progressDialog.setMessage("Signing up " + edtUsername.getText().toString());
-                progressDialog.show();
-                 appuser.signUpInBackground(new SignUpCallback() {
-                                                @Override
-                                                public void done(ParseException e) {
-                                                    if(e==null)
-                                                    {
-                                                        FancyToast.makeText(SignUp.this,appuser.getUsername() + " is signed up successfully",Toast.LENGTH_SHORT,FancyToast.SUCCESS,true).show();
-                                                    }
-                                                    else
-                                                    {
-                                                        FancyToast.makeText(SignUp.this,e.getMessage(),Toast.LENGTH_LONG,FancyToast.ERROR,true).show();
-                                                    }
-                                                    progressDialog.dismiss();
-                                                }
-                                            }
-                 );
+                if(edtEmail.getText().toString().equals("")||edtUsername.getText().toString().equals("")||edtPassword.getText().toString().equals(""))
+                {
+                    FancyToast.makeText(SignUp.this,"Email,Username,Password is required",Toast.LENGTH_SHORT,FancyToast.INFO,true).show();
+
+                }
+                else {
+                    final ParseUser appuser = new ParseUser();
+                    appuser.setEmail(edtEmail.getText().toString());
+                    appuser.setUsername(edtUsername.getText().toString());
+                    appuser.setPassword(edtPassword.getText().toString());
+                    // to show user to wait while u r signed in
+                    ProgressDialog progressDialog = new ProgressDialog(this);
+                    progressDialog.setMessage("Signing up " + edtUsername.getText().toString());
+                    progressDialog.show();
+                    appuser.signUpInBackground(new SignUpCallback() {
+                                                   @Override
+                                                   public void done(ParseException e) {
+                                                       if (e == null) {
+                                                           FancyToast.makeText(SignUp.this, appuser.getUsername() + " is signed up successfully", Toast.LENGTH_SHORT, FancyToast.SUCCESS, true).show();
+                                                       } else {
+                                                           FancyToast.makeText(SignUp.this, e.getMessage(), Toast.LENGTH_LONG, FancyToast.ERROR, true).show();
+                                                       }
+                                                       progressDialog.dismiss();
+                                                   }
+                                               }
+                    );
+                }
                 break;
             case R.id.btnLogIn:
                 Intent intent=new Intent(SignUp.this,LoginActivity.class);
