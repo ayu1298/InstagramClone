@@ -2,6 +2,7 @@ package com.example.instagramclone;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,18 +29,18 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        txtGetData=findViewById(R.id.txtGetdata);
-        btnGetAll=findViewById(R.id.btnGetAll);
-        btnTransition=findViewById(R.id.btnNextActivity);
+        txtGetData = findViewById(R.id.txtGetdata);
+        btnGetAll = findViewById(R.id.btnGetAll);
+        btnTransition = findViewById(R.id.btnNextActivity);
+
         txtGetData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ParseQuery<ParseObject> parseQuery=ParseQuery.getQuery("Boxer");
+                ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Boxer");
                 parseQuery.getInBackground("QdhkSIr7td", new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject object, ParseException e) {
-                        if(object!=null && e==null)
-                        {
+                        if (object != null && e == null) {
                             txtGetData.setText(object.get("punch_speed") + "");
                         }
                     }
@@ -49,34 +50,35 @@ public class SignUp extends AppCompatActivity {
         btnGetAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                allBoxers="";
-                ParseQuery<ParseObject> queryAll=ParseQuery.getQuery("Boxer");
-                queryAll.whereGreaterThan("punch_speed",100);
+                allBoxers = "";
+                ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("Boxer");
+                queryAll.whereGreaterThan("punch_speed", 100);
                 queryAll.setLimit(1);
                 queryAll.findInBackground(new FindCallback<ParseObject>() {
                     @Override
                     public void done(List<ParseObject> objects, ParseException e) {
-                        if(e==null)
-                        {
-                            if(objects.size()>0)
-                            {   for(ParseObject parseObject: objects)
-                                allBoxers+=parseObject.get("punch_speed") + "\n";
-                                FancyToast.makeText(SignUp.this,allBoxers,FancyToast.LENGTH_LONG,FancyToast.SUCCESS,true).show();
-                            }
-                            else {
-                                FancyToast.makeText(SignUp.this,"Failed",FancyToast.LENGTH_LONG,FancyToast.ERROR,true).show();
+                        if (e == null) {
+                            if (objects.size() > 0) {
+                                for (ParseObject parseObject : objects)
+                                    allBoxers += parseObject.get("punch_speed") + "\n";
+                                FancyToast.makeText(SignUp.this, allBoxers, FancyToast.LENGTH_LONG, FancyToast.SUCCESS, true).show();
+                            } else {
+                                FancyToast.makeText(SignUp.this, "Failed", FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();
                             }
                         }
                     }
                 });
             }
         });
-         btnTransition.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
 
-             }
-         });
+
+        btnTransition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SignUp.this,SignUpLoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void hello(View view)
