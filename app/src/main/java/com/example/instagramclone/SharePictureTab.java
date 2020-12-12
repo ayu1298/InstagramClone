@@ -2,6 +2,7 @@ package com.example.instagramclone;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -24,9 +25,11 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +40,7 @@ import java.io.ByteArrayOutputStream;
  * A simple {@link Fragment} subclass.
  * Use the {@link SharePictureTab#newInstance} factory method to
  * create an instance of this fragment.
- */
+ */   @SuppressWarnings("unchecked")
    public class SharePictureTab extends Fragment implements View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -133,6 +136,23 @@ import java.io.ByteArrayOutputStream;
                           parseObject.put("picture",parseFile);
                           parseObject.put("image_des",edtDescrption.getText().toString());
                           parseObject.put("username", ParseUser.getCurrentUser().getUsername());
+                          final ProgressDialog dialog=new ProgressDialog(getContext());
+                          dialog.setMessage("Loading...");
+                          dialog.show();
+                          parseObject.saveInBackground(new SaveCallback() {
+                              @Override
+                              public void done(ParseException e) {
+                                  if(e==null)
+                                  {
+                                      FancyToast.makeText(getContext(),"Done!!!",Toast.LENGTH_SHORT,FancyToast.SUCCESS,true).show();
+                                  }
+                                  else
+                                  {
+                                      FancyToast.makeText(getContext(),"Unknown Erorr!",Toast.LENGTH_SHORT,FancyToast.ERROR,true).show();
+                                  }
+                                  dialog.dismiss();
+                              }
+                          });
 
                       }
                   }
@@ -188,7 +208,7 @@ import java.io.ByteArrayOutputStream;
             }
         catch (Exception e)
         {
-            e.getStackTrace();
+            e.printStackTrace();
         }
         }
     }

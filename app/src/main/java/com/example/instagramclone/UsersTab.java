@@ -23,6 +23,7 @@ import java.util.List;
  * Use the {@link UsersTab#newInstance} factory method to
  * create an instance of this fragment.
  */
+@SuppressWarnings("unchecked")
 public class UsersTab extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
