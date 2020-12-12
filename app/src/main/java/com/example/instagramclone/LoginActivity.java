@@ -1,7 +1,5 @@
 package com.example.instagramclone;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -11,10 +9,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 
@@ -71,6 +70,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     break;
 
             case R.id.button2:
+                Intent intent=new Intent(LoginActivity.this,SignUp.class);
+                startActivity(intent);
                 break;
 
 
@@ -87,5 +88,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void transitionToSocialMediaActivity(){
         Intent intent=new Intent(LoginActivity.this,SocialMediaActivity.class);
         startActivity(intent);
+        finish();
     }
         }
