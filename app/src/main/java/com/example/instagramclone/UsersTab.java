@@ -1,9 +1,11 @@
 package com.example.instagramclone;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -24,7 +27,8 @@ import java.util.List;
  * create an instance of this fragment.
  */
 @SuppressWarnings("unchecked")
-public class UsersTab extends Fragment {
+
+  public class  UsersTab extends Fragment implements AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -78,6 +82,9 @@ public class UsersTab extends Fragment {
         arrayList=new ArrayList();
         arrayAdapter=new ArrayAdapter(getContext(), android.R.layout.simple_expandable_list_item_1,arrayList);
 
+        listView.setOnItemClickListener(UsersTab.this);
+        listView.setOnItemLongClickListener(UsersTab.this);
+
         ParseQuery<ParseUser> parseQuery=ParseUser.getQuery();
         parseQuery.whereNotEqualTo("username",ParseUser.getCurrentUser().getUsername());
 
@@ -103,4 +110,33 @@ public class UsersTab extends Fragment {
         return  view;
 
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        Intent intent=new Intent(getContext(),UsersPost.class);
+        intent.putExtra("username",arrayList.get(position).toString());
+        startActivity(intent);
+
+    }
+      // to get details when long pressed on user
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+         ParseQuery<ParseUser> parseUserParseQuery=ParseUser.getQuery();
+         parseUserParseQuery.whereEqualTo("username",arrayList.get(position));
+         parseUserParseQuery.getFirstInBackground(new GetCallback<ParseUser>() {
+             @Override
+             public void done(ParseUser user, ParseException e) {
+                 if(e==null&&user!=null)
+                 {
+                    // FancyToast.makeText(getContext(),user.get("profileProfession") + "", Toast.LENGTH_SHORT,FancyToast.SUCCESS,true).show();
+
+                 }
+             }
+         });
+
+
+        return true;
+    }
+
+
 }

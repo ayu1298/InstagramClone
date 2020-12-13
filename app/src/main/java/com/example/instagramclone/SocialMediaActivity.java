@@ -98,13 +98,13 @@ public class SocialMediaActivity extends AppCompatActivity {
 
     private void captureImage() {
         Intent intent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent,4000);
+        startActivityForResult(intent,3000);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==4000 && requestCode==RESULT_OK&& data!=null)
+        if(requestCode==3000 && requestCode==RESULT_OK&& data!=null)
         {
             try {
                 {
